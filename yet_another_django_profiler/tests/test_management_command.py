@@ -19,13 +19,13 @@ from tempfile import NamedTemporaryFile
 from django.core.management import call_command
 from django.test import TestCase
 from django.test.utils import override_settings
-from django.utils.six.moves import cStringIO as StringIO
+from django.utils.six.moves import cStringIO as StringIO  # pylint: disable=import-error
 from django.utils.text import force_text
 
 import pytest
 
 
-class ManagementCommandCases(object):
+class ManagementCommandCasesMixin(object):
 
     def test_call_graph(self):
         """Using "profile" without a parameter should yield a PDF call graph"""
@@ -118,25 +118,25 @@ class ManagementCommandCases(object):
             if option not in options:
                 options[option] = None
         call_command('profile', 'diffsettings', stdout=output, **options)
-        text = output.getvalue()
+        text = output.getvalue()  # pylint: disable=import-error
         assert 'INSTALLED_APPS' in text
         return text
 
 
 @override_settings(YADP_ENABLED=True)
-class CProfileCommandTest(TestCase, ManagementCommandCases):
+class CProfileCommandTest(TestCase, ManagementCommandCasesMixin):
     """Management command tests using cProfile"""
 
     def test_backend(self):
         """The cProfile profiling backend should be used"""
         from yet_another_django_profiler.conf import settings
-        assert settings.YADP_PROFILER_BACKEND == 'cProfile'
+        assert settings.YADP_PROFILER_BACKEND == 'cProfile'  # pylint: disable=import-error
 
 
 @pytest.mark.skipif(platform.python_implementation() != 'CPython' or sys.version_info[:2] == (3, 2),
                     reason='yappi does not yet work in this Python implementation')
 @override_settings(YADP_ENABLED=True, YADP_PROFILER_BACKEND='yappi')
-class YappiCommandTest(TestCase, ManagementCommandCases):
+class YappiCommandTest(TestCase, ManagementCommandCasesMixin):
     """Management command tests using Yappi instead of cProfile"""
 
     def test_backend(self):

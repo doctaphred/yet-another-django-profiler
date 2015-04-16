@@ -23,7 +23,7 @@ import pytest
 HELP_EXCERPT = 'profiling middleware'
 
 
-class ParameterCases(object):
+class ParameterCasesMixin(object):
     """Parameter tests to be run for each profiler backend"""
 
     def test_call_graph(self):
@@ -114,7 +114,7 @@ class ParameterCases(object):
 
 
 @override_settings(YADP_ENABLED=True)
-class CProfileTest(TestCase, ParameterCases):
+class CProfileTest(TestCase, ParameterCasesMixin):
     """Profiling parameter tests using cProfile"""
 
     def test_backend(self):
@@ -126,7 +126,7 @@ class CProfileTest(TestCase, ParameterCases):
 @pytest.mark.skipif(platform.python_implementation() != 'CPython' or sys.version_info[:2] == (3, 2),
                     reason='yappi does not yet work in this Python implementation')
 @override_settings(YADP_ENABLED=True, YADP_PROFILER_BACKEND='yappi')
-class YappiTest(TestCase, ParameterCases):
+class YappiTest(TestCase, ParameterCasesMixin):
     """Profiling parameter tests using Yappi instead of cProfile"""
 
     def test_backend(self):

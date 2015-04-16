@@ -20,7 +20,7 @@ import subprocess
 import tempfile
 
 from django.core.exceptions import MiddlewareNotUsed
-from django.utils.six.moves import cStringIO as StringIO
+from django.utils.six.moves import cStringIO as StringIO  # pylint: disable=import-error
 
 from .conf import settings
 

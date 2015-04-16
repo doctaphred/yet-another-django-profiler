@@ -37,11 +37,12 @@ def path_to_module_name(path):
     if path.startswith(cwd):
         path = path[len(cwd) + 1:]
     for pattern in settings.YADP_MODULE_PARENT_DIR_PATTERNS:
-        match = True
-        while match:
+        while True:
             match = re.search(pattern, path)
             if match:
                 path = path[match.end():]
+            else:
+                break
     path = path.replace('/', '.')
     path = path.replace('\\', '.')
     return path
